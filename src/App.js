@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { Auth } from "./components/auth";
 import { db } from "./config/firebase";
-import { getDocs, collection, addDoc } from "firebase/firestore";
+import { getDocs, collection, addDoc, deleteDoc, doc } from "firebase/firestore";
 
 function App() {
   const [movieList, setMovielist] = useState([]);
@@ -43,6 +43,12 @@ function App() {
     }
   };
 
+  const deleteMovie = async (id) => {
+    const movieDoc = doc(db, "movie", id);
+    await deleteDoc(movieDoc);
+    getMovieList();
+  }
+
   return (
     <div className="App">
       <Auth />
@@ -79,6 +85,7 @@ function App() {
               <div>
                 <h1 style={{ color: movie.oscar ? "green" : "red" }}>{movie.title}</h1>
                 <p>{movie.releaseDate}</p>
+                <button onClick={() => deleteMovie(movie.id)}>Delete Movie</button>
               </div>
             </div>
           );
